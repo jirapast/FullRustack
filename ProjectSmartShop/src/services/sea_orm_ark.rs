@@ -1,24 +1,23 @@
 use actix_web::web::block;
 use futures::executor::block_on;
-use sea_orm::{ActiveValue, Database, DatabaseConnection};
-use sea_orm::{ConnectionTrait, DbBackend, DbErr, Statement};
-use sea_orm::*;
-use std::env;
-// use crate::entities::demo_items::Model; // Add this import
-// use entities::demo_items::Model; // Add this import
+// use std::env;
+use sea_orm::{ActiveValue, Database, DatabaseConnection, ConnectionTrait, DbBackend, DbErr, Statement};
+use sea_orm::EntityTrait;
+// use std::sync::Arc;
 
-// mod entities;
-// use entities::{prelude::*, *};
-
-use std::sync::Arc;
+use crate::entities::demo_items::Model; // Add this import
+use crate::entities::{prelude::*, *};
+use crate::entities::prelude::DemoItems;
 
 
-const DATABASE_URL: &str = "sqlite://db/mydb.sqlite";
+
+
+const DB_URL: &str = "sqlite://db/mydb.sqlite";
 const DB_NAME: &str = "tmp_table";
 
 
 pub async fn connect_db() -> DatabaseConnection {
-    let db = Database::connect(DATABASE_URL)
+    let db = Database::connect(DB_URL)
         .await
         .expect("Database connection failed");
     db
