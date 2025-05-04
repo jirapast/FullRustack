@@ -1,8 +1,10 @@
 use async_graphql::{Context, EmptyMutation, EmptySubscription, Object, Schema, SimpleObject};
+use serde::Deserialize;
 
 
 #[derive(Debug)]
 #[derive(SimpleObject)]
+#[derive(Deserialize)]
 pub struct MyObject {
     pub id: i32,
     pub name: String,

@@ -4,15 +4,11 @@ use async_graphql::{Context, EmptyMutation, EmptySubscription, Object, Schema, S
 
 use crate::services::sea_orm_ark;
 use crate::domain::model::{MyObject, MyGraphQLObject};
-// use crate::repo::data_model::MyGraphQLObject;
-// use crate::graphql::graphql::MyGraphQLObject;
 
 
 pub async fn repository_get_item() -> MyObject {
     MyGraphQLObject::get_item().await
 }
-
-
 
 pub async fn repository_get_items() -> Vec<MyObject> {
     MyGraphQLObject::get_items().await

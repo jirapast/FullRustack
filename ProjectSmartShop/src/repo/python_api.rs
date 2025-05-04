@@ -1,31 +1,58 @@
-use std::sync::Arc;
-use sea_orm::{Database, DatabaseConnection};
-use async_graphql::{Context, EmptyMutation, EmptySubscription, Object, Schema, SimpleObject};
+use crate::domain::model::MyObject;
+use reqwest;
 
-use crate::services::sea_orm_ark;
-use crate::domain::model::{MyObject, MyGraphQLObject};
+// use crate::domain::model::MyObject;
+// use serde::Deserialize;
 
 
-// pub async fn repository_get_item() -> MyObject {
-    // MyGraphQLObject::get_item().await
+// #[derive(Debug, Deserialize)]
+// struct MyJsonRes {
+//     key: String,
 // }
 
-
-
-// pub async fn repository_get_items() -> Vec<MyObject> {
-    // MyGraphQLObject::get_items().await
-// }
-
-pub async fn repository_get_item_from_python_api() -> MyObject {
-    // let db: &'ctx Arc<DatabaseConnection> = ctx.data_unchecked();
-    // let row: Option<crate::entities::demo_items::Model> = sea_orm_ark::find_row(0, &db).await;
-    // let (id, name) = match row {
-    //     Some(crate::entities::demo_items::Model {id, name}) => (id, name),
-    //     None => return MyObject {
-    //         id: 0,
-    //         name: "default".to_string()
-    //     }
-    // };
-    MyObject { id: 0, name: "ddd".to_string() }
+pub async fn repository_get_item_from_rest_api(url: &str) -> Result<MyObject, reqwest::Error> {
+    let res = reqwest::get(url).await?.json::<MyObject>().await?;
+    Ok(MyObject {
+        // key: format!("{}", res.key),
+        id: res.id,
+        name: format!("{}", res.name),
+    })
 }
 
+pub async fn repository_get_item() -> MyObject {
+    let url = "http://127.0.0.1:8000/api";
+
+    match repository_get_item_from_rest_api(url).await {
+        Ok(res) => res,
+        Err(_) => MyObject {
+            // id: "default_id".to_string(),
+            id: 0,
+            name: "default_name".to_string(),
+        }, // If error occurs, return a default value
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    // use core::panic;
+
+    use super::*;
+
+
+    #[tokio::test]
+    async fn test_repository_get_item_from_rest_api() {
+        let url = "http://127.0.0.1:8000/api";
+        let res = repository_get_item_from_rest_api(url).await;
+        let res = res.unwrap();
+        assert_eq!(res.id, 0);
+        assert_eq!(res.name, "my_name".to_string());
+    }
+
+    #[tokio::test]
+    async fn test_repository_get_item() {
+        let res = repository_get_item().await;
+        assert_eq!(res.id, 0);
+        assert_eq!(res.name, "my_name".to_string());
+    }
+
+}
