@@ -2,7 +2,6 @@
 
 
 ```mermaid
-
 classDiagram
     
     class domain_model_data_models_my_object {
@@ -15,10 +14,8 @@ classDiagram
         +get_items()
     }
 
-    
-
     class repo_local_db_orm {
-        <<local_orm, python-api, gRPS, ...>>
+        <<python-api, gRPS, ...>>
         +repository_get_item()
         +repository_get_items()
         +repository_get_item_from_local_orm()
@@ -52,24 +49,6 @@ classDiagram
     graphql<--domain_model_data_models_my_object
     graphql<--repo_local_db_orm
 
-
-    class repo_rest_api {
-        <<local_orm, python-api, gRPS, ...>>
-        +repository_get_item_from_rest_api()
-        +repository_get_item()
-    }
-    repo_rest_api<--domain_model_data_models_my_object
-    graphql<--repo_rest_api
     
 ```
 
-
-5-3-25 TN
-- draft overall architecture like clean architecture
-- simple combo of graphql, sqlite3, sea_orm
-- draft diagram in Mermaid
-- ready to scale
-
-5-4-25 TN
-- scale repository to REST API
-- poc gRPC before scale the repo/
